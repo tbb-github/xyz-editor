@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .xy-editor {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            /* background-color: skyblue; */
+        }
+        .xy-editor-top {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 4%;
+            background-color: pink;
+        }
+        .xy-editor-left {
+            position: absolute;
+            top: 4%;
+            left: 0;
+            width: 10%;
+            height: 95%;
+            background-color: green;
+        }
+        .xy-editor-content {
+            position: absolute;
+            top: 4%;
+            left: 10%;
+            width: 90%;
+            height: 95%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="xy-editor">
+        <div class="xy-editor-top">
+        </div>
+        <div class="xy-editor-left">
+        </div>
+        <div class="xy-editor-content">
+            <canvas id="myCanvas"></canvas>
+        </div>
+    </div>
+
+    <script  type="module">
+        import {WebGLRenderer, Scene} from './index.js';
+  
+
+    </script>
+</body>
+</html>

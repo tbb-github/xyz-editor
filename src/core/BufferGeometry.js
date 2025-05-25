@@ -5,11 +5,14 @@
 import { Vector3 } from '../math/Vector3.js';
 import { Box3 } from '../math/Box3.js';
 import { EventDispatcher } from './EventDispatcher.js';
+import { _Math } from '../math/Math.js';
+import {BufferAttribute} from './BufferAttribute.js'
+import {Sphere} from '../math/Sphere.js'
 function BufferGeometry() {
 
-	Object.defineProperty( this, 'id', { value: GeometryIdCount ++ } );
+	// Object.defineProperty( this, 'id', { value: GeometryIdCount ++ } );
 
-	this.uuid = Math.generateUUID();
+	this.uuid = _Math.generateUUID();
 
 	this.name = '';
 	this.type = 'BufferGeometry';

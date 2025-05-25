@@ -544,7 +544,6 @@ Object.assign( Object3D.prototype,   {
 
 		this.matrix.compose( this.position, this.quaternion, this.scale );
 
-		console.log(this.quaternion, 'this.matrix');
 		
 
 		this.matrixWorldNeedsUpdate = true;

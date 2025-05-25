@@ -33,7 +33,7 @@ Object.defineProperties( Euler.prototype, {
 		set: function ( value ) {
 
 			this._x = value;
-			console.log(this._x, 'this._x');
+
 			
 			this.onChangeCallback();
 

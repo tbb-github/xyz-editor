@@ -1,22 +1,33 @@
-import { WebGLCoordinateSystem, WebGPUCoordinateSystem } from '../constants.js';
-import { Vector3 } from './Vector3.js';
+/**
+ * @author mrdoob / http://mrdoob.com/
+ * @author alteredq / http://alteredqualia.com/
+ * @author bhouston / http://exocortex.com
+ */
 import { Sphere } from './Sphere.js';
+import { Vector3 } from './Vector3.js';
 import { Plane } from './Plane.js';
+function Frustum ( p0, p1, p2, p3, p4, p5 ) {
 
-const _sphere = /*@__PURE__*/ new Sphere();
-const _vector = /*@__PURE__*/ new Vector3();
+	this.planes = [
 
-class Frustum {
+		( p0 !== undefined ) ? p0 : new Plane(),
+		( p1 !== undefined ) ? p1 : new Plane(),
+		( p2 !== undefined ) ? p2 : new Plane(),
+		( p3 !== undefined ) ? p3 : new Plane(),
+		( p4 !== undefined ) ? p4 : new Plane(),
+		( p5 !== undefined ) ? p5 : new Plane()
 
-	constructor( p0 = new Plane(), p1 = new Plane(), p2 = new Plane(), p3 = new Plane(), p4 = new Plane(), p5 = new Plane() ) {
+	];
 
-		this.planes = [ p0, p1, p2, p3, p4, p5 ];
+};
 
-	}
+Object.assign( Frustum.prototype, {
 
-	set( p0, p1, p2, p3, p4, p5 ) {
+	constructor: Frustum,
 
-		const planes = this.planes;
+	set: function ( p0, p1, p2, p3, p4, p5 ) {
+
+		var planes = this.planes;
 
 		planes[ 0 ].copy( p0 );
 		planes[ 1 ].copy( p1 );
@@ -27,13 +38,13 @@ class Frustum {
 
 		return this;
 
-	}
+	},
 
-	copy( frustum ) {
+	copy: function ( frustum ) {
 
-		const planes = this.planes;
+		var planes = this.planes;
 
-		for ( let i = 0; i < 6; i ++ ) {
+		for ( var i = 0; i < 6; i ++ ) {
 
 			planes[ i ].copy( frustum.planes[ i ] );
 
@@ -41,82 +52,56 @@ class Frustum {
 
 		return this;
 
-	}
+	},
 
-	setFromProjectionMatrix( m, coordinateSystem = WebGLCoordinateSystem ) {
+	setFromMatrix: function ( m ) {
 
-		const planes = this.planes;
-		const me = m.elements;
-		const me0 = me[ 0 ], me1 = me[ 1 ], me2 = me[ 2 ], me3 = me[ 3 ];
-		const me4 = me[ 4 ], me5 = me[ 5 ], me6 = me[ 6 ], me7 = me[ 7 ];
-		const me8 = me[ 8 ], me9 = me[ 9 ], me10 = me[ 10 ], me11 = me[ 11 ];
-		const me12 = me[ 12 ], me13 = me[ 13 ], me14 = me[ 14 ], me15 = me[ 15 ];
+		var planes = this.planes;
+		var me = m.elements;
+		var me0 = me[ 0 ], me1 = me[ 1 ], me2 = me[ 2 ], me3 = me[ 3 ];
+		var me4 = me[ 4 ], me5 = me[ 5 ], me6 = me[ 6 ], me7 = me[ 7 ];
+		var me8 = me[ 8 ], me9 = me[ 9 ], me10 = me[ 10 ], me11 = me[ 11 ];
+		var me12 = me[ 12 ], me13 = me[ 13 ], me14 = me[ 14 ], me15 = me[ 15 ];
 
 		planes[ 0 ].setComponents( me3 - me0, me7 - me4, me11 - me8, me15 - me12 ).normalize();
 		planes[ 1 ].setComponents( me3 + me0, me7 + me4, me11 + me8, me15 + me12 ).normalize();
 		planes[ 2 ].setComponents( me3 + me1, me7 + me5, me11 + me9, me15 + me13 ).normalize();
 		planes[ 3 ].setComponents( me3 - me1, me7 - me5, me11 - me9, me15 - me13 ).normalize();
 		planes[ 4 ].setComponents( me3 - me2, me7 - me6, me11 - me10, me15 - me14 ).normalize();
-
-		if ( coordinateSystem === WebGLCoordinateSystem ) {
-
-			planes[ 5 ].setComponents( me3 + me2, me7 + me6, me11 + me10, me15 + me14 ).normalize();
-
-		} else if ( coordinateSystem === WebGPUCoordinateSystem ) {
-
-			planes[ 5 ].setComponents( me2, me6, me10, me14 ).normalize();
-
-		} else {
-
-			throw new Error( 'THREE.Frustum.setFromProjectionMatrix(): Invalid coordinate system: ' + coordinateSystem );
-
-		}
+		planes[ 5 ].setComponents( me3 + me2, me7 + me6, me11 + me10, me15 + me14 ).normalize();
 
 		return this;
 
-	}
+	},
 
-	intersectsObject( object ) {
+	intersectsObject: function () {
 
-		if ( object.boundingSphere !== undefined ) {
+		var sphere = new Sphere();
 
-			if ( object.boundingSphere === null ) object.computeBoundingSphere();
+		return function ( object ) {
 
-			_sphere.copy( object.boundingSphere ).applyMatrix4( object.matrixWorld );
-
-		} else {
-
-			const geometry = object.geometry;
+			var geometry = object.geometry;
 
 			if ( geometry.boundingSphere === null ) geometry.computeBoundingSphere();
 
-			_sphere.copy( geometry.boundingSphere ).applyMatrix4( object.matrixWorld );
+			sphere.copy( geometry.boundingSphere );
+			sphere.applyMatrix4( object.matrixWorld );
 
-		}
+			return this.intersectsSphere( sphere );
 
-		return this.intersectsSphere( _sphere );
+		};
 
-	}
+	}(),
 
-	intersectsSprite( sprite ) {
+	intersectsSphere: function ( sphere ) {
 
-		_sphere.center.set( 0, 0, 0 );
-		_sphere.radius = 0.7071067811865476;
-		_sphere.applyMatrix4( sprite.matrixWorld );
+		var planes = this.planes;
+		var center = sphere.center;
+		var negRadius = - sphere.radius;
 
-		return this.intersectsSphere( _sphere );
+		for ( var i = 0; i < 6; i ++ ) {
 
-	}
-
-	intersectsSphere( sphere ) {
-
-		const planes = this.planes;
-		const center = sphere.center;
-		const negRadius = - sphere.radius;
-
-		for ( let i = 0; i < 6; i ++ ) {
-
-			const distance = planes[ i ].distanceToPoint( center );
+			var distance = planes[ i ].distanceToPoint( center );
 
 			if ( distance < negRadius ) {
 
@@ -128,39 +113,51 @@ class Frustum {
 
 		return true;
 
-	}
+	},
 
-	intersectsBox( box ) {
+	intersectsBox: function () {
 
-		const planes = this.planes;
+		var p1 = new Vector3(),
+			p2 = new Vector3();
 
-		for ( let i = 0; i < 6; i ++ ) {
+		return function ( box ) {
 
-			const plane = planes[ i ];
+			var planes = this.planes;
 
-			// corner at max distance
+			for ( var i = 0; i < 6 ; i ++ ) {
 
-			_vector.x = plane.normal.x > 0 ? box.max.x : box.min.x;
-			_vector.y = plane.normal.y > 0 ? box.max.y : box.min.y;
-			_vector.z = plane.normal.z > 0 ? box.max.z : box.min.z;
+				var plane = planes[ i ];
 
-			if ( plane.distanceToPoint( _vector ) < 0 ) {
+				p1.x = plane.normal.x > 0 ? box.min.x : box.max.x;
+				p2.x = plane.normal.x > 0 ? box.max.x : box.min.x;
+				p1.y = plane.normal.y > 0 ? box.min.y : box.max.y;
+				p2.y = plane.normal.y > 0 ? box.max.y : box.min.y;
+				p1.z = plane.normal.z > 0 ? box.min.z : box.max.z;
+				p2.z = plane.normal.z > 0 ? box.max.z : box.min.z;
 
-				return false;
+				var d1 = plane.distanceToPoint( p1 );
+				var d2 = plane.distanceToPoint( p2 );
 
+				// if both outside plane, no intersection
+
+				if ( d1 < 0 && d2 < 0 ) {
+
+					return false;
+
+				}
 			}
 
-		}
+			return true;
+		};
 
-		return true;
+	}(),
 
-	}
 
-	containsPoint( point ) {
+	containsPoint: function ( point ) {
 
-		const planes = this.planes;
+		var planes = this.planes;
 
-		for ( let i = 0; i < 6; i ++ ) {
+		for ( var i = 0; i < 6; i ++ ) {
 
 			if ( planes[ i ].distanceToPoint( point ) < 0 ) {
 
@@ -172,15 +169,13 @@ class Frustum {
 
 		return true;
 
+	},
+
+	clone: function () {
+
+		return new Frustum().copy( this );
+
 	}
 
-	clone() {
-
-		return new this.constructor().copy( this );
-
-	}
-
-}
-
-
-export { Frustum };
+});
+export {Frustum}

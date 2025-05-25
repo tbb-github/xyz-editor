@@ -1,75 +1,48 @@
-import * as MathUtils from './MathUtils.js';
+/**
+ * @author mrdoob / http://mrdoob.com/
+ * @author philogb / http://blog.thejit.org/
+ * @author egraether / http://egraether.com/
+ * @author zz85 / http://www.lab4games.net/zz85/blog
+ */
 
-class Vector2 {
+function Vector2 ( x, y ) {
 
-	constructor( x = 0, y = 0 ) {
+	this.x = x || 0;
+	this.y = y || 0;
 
-		Vector2.prototype.isVector2 = true;
+};
 
-		this.x = x;
-		this.y = y;
+Object.assign( Vector2.prototype ,{
 
-	}
+	isVector2: true,
+	// constructor: Vector2,
 
-	get width() {
-
-		return this.x;
-
-	}
-
-	set width( value ) {
-
-		this.x = value;
-
-	}
-
-	get height() {
-
-		return this.y;
-
-	}
-
-	set height( value ) {
-
-		this.y = value;
-
-	}
-
-	set( x, y ) {
+	set: function ( x, y ) {
 
 		this.x = x;
 		this.y = y;
 
 		return this;
 
-	}
+	},
 
-	setScalar( scalar ) {
-
-		this.x = scalar;
-		this.y = scalar;
-
-		return this;
-
-	}
-
-	setX( x ) {
+	setX: function ( x ) {
 
 		this.x = x;
 
 		return this;
 
-	}
+	},
 
-	setY( y ) {
+	setY: function ( y ) {
 
 		this.y = y;
 
 		return this;
 
-	}
+	},
 
-	setComponent( index, value ) {
+	setComponent: function ( index, value ) {
 
 		switch ( index ) {
 
@@ -79,11 +52,9 @@ class Vector2 {
 
 		}
 
-		return this;
+	},
 
-	}
-
-	getComponent( index ) {
+	getComponent: function ( index ) {
 
 		switch ( index ) {
 
@@ -93,388 +64,359 @@ class Vector2 {
 
 		}
 
-	}
+	},
 
-	clone() {
-
-		return new this.constructor( this.x, this.y );
-
-	}
-
-	copy( v ) {
+	copy: function ( v ) {
 
 		this.x = v.x;
 		this.y = v.y;
 
 		return this;
 
-	}
+	},
 
-	add( v ) {
+	add: function ( v, w ) {
+
+		if ( w !== undefined ) {
+
+			console.warn( 'Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
+			return this.addVectors( v, w );
+
+		}
 
 		this.x += v.x;
 		this.y += v.y;
 
 		return this;
 
-	}
+	},
 
-	addScalar( s ) {
-
-		this.x += s;
-		this.y += s;
-
-		return this;
-
-	}
-
-	addVectors( a, b ) {
+	addVectors: function ( a, b ) {
 
 		this.x = a.x + b.x;
 		this.y = a.y + b.y;
 
 		return this;
 
-	}
+	},
 
-	addScaledVector( v, s ) {
+	addScalar: function ( s ) {
 
-		this.x += v.x * s;
-		this.y += v.y * s;
+		this.x += s;
+		this.y += s;
 
 		return this;
 
-	}
+	},
 
-	sub( v ) {
+	sub: function ( v, w ) {
+
+		if ( w !== undefined ) {
+
+			console.warn( 'Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
+			return this.subVectors( v, w );
+
+		}
 
 		this.x -= v.x;
 		this.y -= v.y;
 
 		return this;
 
-	}
+	},
 
-	subScalar( s ) {
-
-		this.x -= s;
-		this.y -= s;
-
-		return this;
-
-	}
-
-	subVectors( a, b ) {
+	subVectors: function ( a, b ) {
 
 		this.x = a.x - b.x;
 		this.y = a.y - b.y;
 
 		return this;
 
-	}
+	},
 
-	multiply( v ) {
+	multiply: function ( v ) {
 
 		this.x *= v.x;
 		this.y *= v.y;
 
 		return this;
 
-	}
+	},
 
-	multiplyScalar( scalar ) {
+	multiplyScalar: function ( s ) {
 
-		this.x *= scalar;
-		this.y *= scalar;
+		this.x *= s;
+		this.y *= s;
 
 		return this;
 
-	}
+	},
 
-	divide( v ) {
+	divide: function ( v ) {
 
 		this.x /= v.x;
 		this.y /= v.y;
 
 		return this;
 
-	}
+	},
 
-	divideScalar( scalar ) {
+	divideScalar: function ( scalar ) {
 
-		return this.multiplyScalar( 1 / scalar );
+		if ( scalar !== 0 ) {
 
-	}
+			var invScalar = 1 / scalar;
 
-	applyMatrix3( m ) {
+			this.x *= invScalar;
+			this.y *= invScalar;
 
-		const x = this.x, y = this.y;
-		const e = m.elements;
+		} else {
 
-		this.x = e[ 0 ] * x + e[ 3 ] * y + e[ 6 ];
-		this.y = e[ 1 ] * x + e[ 4 ] * y + e[ 7 ];
+			this.x = 0;
+			this.y = 0;
 
-		return this;
-
-	}
-
-	min( v ) {
-
-		this.x = Math.min( this.x, v.x );
-		this.y = Math.min( this.y, v.y );
+		}
 
 		return this;
 
-	}
+	},
 
-	max( v ) {
+	min: function ( v ) {
 
-		this.x = Math.max( this.x, v.x );
-		this.y = Math.max( this.y, v.y );
+		if ( this.x > v.x ) {
 
-		return this;
+			this.x = v.x;
 
-	}
+		}
 
-	clamp( min, max ) {
+		if ( this.y > v.y ) {
 
-		// assumes min < max, componentwise
+			this.y = v.y;
 
-		this.x = Math.max( min.x, Math.min( max.x, this.x ) );
-		this.y = Math.max( min.y, Math.min( max.y, this.y ) );
+		}
 
 		return this;
 
-	}
+	},
 
-	clampScalar( minVal, maxVal ) {
+	max: function ( v ) {
 
-		this.x = Math.max( minVal, Math.min( maxVal, this.x ) );
-		this.y = Math.max( minVal, Math.min( maxVal, this.y ) );
+		if ( this.x < v.x ) {
+
+			this.x = v.x;
+
+		}
+
+		if ( this.y < v.y ) {
+
+			this.y = v.y;
+
+		}
 
 		return this;
 
-	}
+	},
 
-	clampLength( min, max ) {
+	clamp: function ( min, max ) {
 
-		const length = this.length();
+		// This function assumes min < max, if this assumption isn't true it will not operate correctly
 
-		return this.divideScalar( length || 1 ).multiplyScalar( Math.max( min, Math.min( max, length ) ) );
+		if ( this.x < min.x ) {
 
-	}
+			this.x = min.x;
 
-	floor() {
+		} else if ( this.x > max.x ) {
+
+			this.x = max.x;
+
+		}
+
+		if ( this.y < min.y ) {
+
+			this.y = min.y;
+
+		} else if ( this.y > max.y ) {
+
+			this.y = max.y;
+
+		}
+
+		return this;
+	},
+
+	clampScalar: ( function () {
+
+		var min, max;
+
+		return function ( minVal, maxVal ) {
+
+			if ( min === undefined ) {
+
+				min = new Vector2();
+				max = new Vector2();
+
+			}
+
+			min.set( minVal, minVal );
+			max.set( maxVal, maxVal );
+
+			return this.clamp( min, max );
+
+		};
+
+	} )(),
+
+	floor: function () {
 
 		this.x = Math.floor( this.x );
 		this.y = Math.floor( this.y );
 
 		return this;
 
-	}
+	},
 
-	ceil() {
+	ceil: function () {
 
 		this.x = Math.ceil( this.x );
 		this.y = Math.ceil( this.y );
 
 		return this;
 
-	}
+	},
 
-	round() {
+	round: function () {
 
 		this.x = Math.round( this.x );
 		this.y = Math.round( this.y );
 
 		return this;
 
-	}
+	},
 
-	roundToZero() {
+	roundToZero: function () {
 
-		this.x = Math.trunc( this.x );
-		this.y = Math.trunc( this.y );
+		this.x = ( this.x < 0 ) ? Math.ceil( this.x ) : Math.floor( this.x );
+		this.y = ( this.y < 0 ) ? Math.ceil( this.y ) : Math.floor( this.y );
 
 		return this;
 
-	}
+	},
 
-	negate() {
+	negate: function () {
 
 		this.x = - this.x;
 		this.y = - this.y;
 
 		return this;
 
-	}
+	},
 
-	dot( v ) {
+	dot: function ( v ) {
 
 		return this.x * v.x + this.y * v.y;
 
-	}
+	},
 
-	cross( v ) {
-
-		return this.x * v.y - this.y * v.x;
-
-	}
-
-	lengthSq() {
+	lengthSq: function () {
 
 		return this.x * this.x + this.y * this.y;
 
-	}
+	},
 
-	length() {
+	length: function () {
 
 		return Math.sqrt( this.x * this.x + this.y * this.y );
 
-	}
+	},
 
-	manhattanLength() {
+	normalize: function () {
 
-		return Math.abs( this.x ) + Math.abs( this.y );
+		return this.divideScalar( this.length() );
 
-	}
+	},
 
-	normalize() {
-
-		return this.divideScalar( this.length() || 1 );
-
-	}
-
-	angle() {
-
-		// computes the angle in radians with respect to the positive x-axis
-
-		const angle = Math.atan2( - this.y, - this.x ) + Math.PI;
-
-		return angle;
-
-	}
-
-	angleTo( v ) {
-
-		const denominator = Math.sqrt( this.lengthSq() * v.lengthSq() );
-
-		if ( denominator === 0 ) return Math.PI / 2;
-
-		const theta = this.dot( v ) / denominator;
-
-		// clamp, to handle numerical problems
-
-		return Math.acos( MathUtils.clamp( theta, - 1, 1 ) );
-
-	}
-
-	distanceTo( v ) {
+	distanceTo: function ( v ) {
 
 		return Math.sqrt( this.distanceToSquared( v ) );
 
-	}
+	},
 
-	distanceToSquared( v ) {
+	distanceToSquared: function ( v ) {
 
-		const dx = this.x - v.x, dy = this.y - v.y;
+		var dx = this.x - v.x, dy = this.y - v.y;
 		return dx * dx + dy * dy;
 
-	}
+	},
 
-	manhattanDistanceTo( v ) {
+	setLength: function ( l ) {
 
-		return Math.abs( this.x - v.x ) + Math.abs( this.y - v.y );
+		var oldLength = this.length();
 
-	}
+		if ( oldLength !== 0 && l !== oldLength ) {
 
-	setLength( length ) {
+			this.multiplyScalar( l / oldLength );
+		}
 
-		return this.normalize().multiplyScalar( length );
+		return this;
 
-	}
+	},
 
-	lerp( v, alpha ) {
+	lerp: function ( v, alpha ) {
 
 		this.x += ( v.x - this.x ) * alpha;
 		this.y += ( v.y - this.y ) * alpha;
 
 		return this;
 
-	}
+	},
 
-	lerpVectors( v1, v2, alpha ) {
-
-		this.x = v1.x + ( v2.x - v1.x ) * alpha;
-		this.y = v1.y + ( v2.y - v1.y ) * alpha;
-
-		return this;
-
-	}
-
-	equals( v ) {
+	equals: function ( v ) {
 
 		return ( ( v.x === this.x ) && ( v.y === this.y ) );
 
-	}
+	},
 
-	fromArray( array, offset = 0 ) {
+	fromArray: function ( array, offset ) {
+
+		if ( offset === undefined ) offset = 0;
 
 		this.x = array[ offset ];
 		this.y = array[ offset + 1 ];
 
 		return this;
 
-	}
+	},
 
-	toArray( array = [], offset = 0 ) {
+	toArray: function ( array, offset ) {
+
+		if ( array === undefined ) array = [];
+		if ( offset === undefined ) offset = 0;
 
 		array[ offset ] = this.x;
 		array[ offset + 1 ] = this.y;
 
 		return array;
 
-	}
+	},
 
-	fromBufferAttribute( attribute, index ) {
+	fromAttribute: function ( attribute, index, offset ) {
 
-		this.x = attribute.getX( index );
-		this.y = attribute.getY( index );
+	    if ( offset === undefined ) offset = 0;
 
-		return this;
+	    index = index * attribute.itemSize + offset;
 
-	}
+	    this.x = attribute.array[ index ];
+	    this.y = attribute.array[ index + 1 ];
 
-	rotateAround( center, angle ) {
+	    return this;
 
-		const c = Math.cos( angle ), s = Math.sin( angle );
+	},
 
-		const x = this.x - center.x;
-		const y = this.y - center.y;
+	clone: function () {
 
-		this.x = x * c - y * s + center.x;
-		this.y = x * s + y * c + center.y;
-
-		return this;
+		return new Vector2( this.x, this.y );
 
 	}
 
-	random() {
-
-		this.x = Math.random();
-		this.y = Math.random();
-
-		return this;
-
-	}
-
-	*[ Symbol.iterator ]() {
-
-		yield this.x;
-		yield this.y;
-
-	}
-
-}
-
-export { Vector2 };
+});
+export {Vector2}

@@ -54,8 +54,32 @@
     </div>
 
     <script  type="module">
-        import {WebGLRenderer, Scene} from './index.js';
-  
+        import {WebGLRenderer, Scene, OrthographicCamera, MeshBasicMaterial, BoxGeometry,Mesh} from './index.js';
+        const myCanvas = document.getElementById('myCanvas');
+        // 1.scene
+        const scene = new Scene();
+        // 2.camera
+        const halfHeight = 150;
+        const aspect = window.innerWidth / window.innerHeight;
+        const [l,r,t,b,n,f] = [-aspect*halfHeight, aspect*halfHeight, halfHeight, -halfHeight, 0.1, 10000]
+        const camera = new OrthographicCamera(l,r,t,b,n,f);
+        camera.position.set(0,0,100);
+        camera.lookAt(scene.position);
+        // 3.mesh
+        const geometry = new BoxGeometry(30,60,90);
+        const material = new MeshBasicMaterial({
+            color: 0xff0000
+        })
+        const mesh = new Mesh(geometry, material);
+        scene.add(mesh);
+
+
+        // 4.renderer
+        const renderer = new WebGLRenderer({
+            canvas: myCanvas
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.render(scene, camera);
 
     </script>
 </body>

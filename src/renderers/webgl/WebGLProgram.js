@@ -17,7 +17,8 @@ var WebGLProgram = ( function () {
 			chunks.push( chunk );
 
 		}
-
+		console.log(chunks, 'chunks');
+		
 		return chunks.join( '\n' );
 
 	};
@@ -32,6 +33,9 @@ var WebGLProgram = ( function () {
 			uniforms[ id ] = gl.getUniformLocation( program, id );
 
 		}
+
+		console.log(identifiers, 'identifiers');
+		
 
 		return uniforms;
 
@@ -68,84 +72,89 @@ var WebGLProgram = ( function () {
 		var vertexShader = material.__webglShader.vertexShader;
 		var fragmentShader = material.__webglShader.fragmentShader;
 
-		var index0AttributeName = material.index0AttributeName;
+		// var index0AttributeName = material.index0AttributeName;
 
-		if ( index0AttributeName === undefined && parameters.morphTargets === true ) {
+		// console.log(index0AttributeName, parameters, 'index0AttributeName');
+		
 
-			// programs with morphTargets displace position out of attribute 0
+		// if ( index0AttributeName === undefined && parameters.morphTargets === true ) {
 
-			index0AttributeName = 'position';
+		// 	// programs with morphTargets displace position out of attribute 0
 
-		}
+		// 	index0AttributeName = 'position';
 
-		var shadowMapTypeDefine = 'SHADOWMAP_TYPE_BASIC';
+		// }
 
-		if ( parameters.shadowMapType === 1 ) {//PCFShadowMap = 1;
+		// var shadowMapTypeDefine = 'SHADOWMAP_TYPE_BASIC';
 
-			shadowMapTypeDefine = 'SHADOWMAP_TYPE_PCF';
+		// if ( parameters.shadowMapType === 1 ) {//PCFShadowMap = 1;
 
-		} else if ( parameters.shadowMapType === 2 ) {//PCFSoftShadowMap = 2;
+		// 	shadowMapTypeDefine = 'SHADOWMAP_TYPE_PCF';
 
-			shadowMapTypeDefine = 'SHADOWMAP_TYPE_PCF_SOFT';
+		// } else if ( parameters.shadowMapType === 2 ) {//PCFSoftShadowMap = 2;
 
-		}
+		// 	shadowMapTypeDefine = 'SHADOWMAP_TYPE_PCF_SOFT';
 
-		var envMapTypeDefine = 'ENVMAP_TYPE_CUBE';
-		var envMapModeDefine = 'ENVMAP_MODE_REFLECTION';
-		var envMapBlendingDefine = 'ENVMAP_BLENDING_MULTIPLY';
+		// }
 
-		if ( parameters.envMap ) {
+		// var envMapTypeDefine = 'ENVMAP_TYPE_CUBE';
+		// var envMapModeDefine = 'ENVMAP_MODE_REFLECTION';
+		// var envMapBlendingDefine = 'ENVMAP_BLENDING_MULTIPLY';
 
-			switch ( material.envMap.mapping ) {
+		// if ( parameters.envMap ) {
 
-				case CubeReflectionMapping:
-				case CubeRefractionMapping:
-					envMapTypeDefine = 'ENVMAP_TYPE_CUBE';
-					break;
+		// 	switch ( material.envMap.mapping ) {
 
-				case EquirectangularReflectionMapping:
-				case EquirectangularRefractionMapping:
-					envMapTypeDefine = 'ENVMAP_TYPE_EQUIREC';
-					break;
+		// 		case CubeReflectionMapping:
+		// 		case CubeRefractionMapping:
+		// 			envMapTypeDefine = 'ENVMAP_TYPE_CUBE';
+		// 			break;
 
-				case SphericalReflectionMapping:
-					envMapTypeDefine = 'ENVMAP_TYPE_SPHERE';
-					break;
+		// 		case EquirectangularReflectionMapping:
+		// 		case EquirectangularRefractionMapping:
+		// 			envMapTypeDefine = 'ENVMAP_TYPE_EQUIREC';
+		// 			break;
 
-			}
+		// 		case SphericalReflectionMapping:
+		// 			envMapTypeDefine = 'ENVMAP_TYPE_SPHERE';
+		// 			break;
 
-			switch ( material.envMap.mapping ) {
+		// 	}
 
-				case CubeRefractionMapping:
-				case EquirectangularRefractionMapping:
-					envMapModeDefine = 'ENVMAP_MODE_REFRACTION';
-					break;
+		// 	switch ( material.envMap.mapping ) {
 
-			}
+		// 		case CubeRefractionMapping:
+		// 		case EquirectangularRefractionMapping:
+		// 			envMapModeDefine = 'ENVMAP_MODE_REFRACTION';
+		// 			break;
 
-			switch ( material.combine ) {
+		// 	}
 
-				case MultiplyOperation:
-					envMapBlendingDefine = 'ENVMAP_BLENDING_MULTIPLY';
-					break;
+		// 	switch ( material.combine ) {
 
-				case MixOperation:
-					envMapBlendingDefine = 'ENVMAP_BLENDING_MIX';
-					break;
+		// 		case MultiplyOperation:
+		// 			envMapBlendingDefine = 'ENVMAP_BLENDING_MULTIPLY';
+		// 			break;
 
-				case AddOperation:
-					envMapBlendingDefine = 'ENVMAP_BLENDING_ADD';
-					break;
+		// 		case MixOperation:
+		// 			envMapBlendingDefine = 'ENVMAP_BLENDING_MIX';
+		// 			break;
 
-			}
+		// 		case AddOperation:
+		// 			envMapBlendingDefine = 'ENVMAP_BLENDING_ADD';
+		// 			break;
 
-		}
+		// 	}
+
+		// }
 
 		// console.log( 'building new program ' );
 
 		//
 
+		
 		var customDefines = generateDefines( defines );
+		console.log(customDefines, 'customDefines');
 
 		//
 
@@ -167,48 +176,9 @@ var WebGLProgram = ( function () {
 
 				customDefines,
 
-				parameters.supportsVertexTextures ? '#define VERTEX_TEXTURES' : '',
-
-				_this.gammaInput ? '#define GAMMA_INPUT' : '',
-				_this.gammaOutput ? '#define GAMMA_OUTPUT' : '',
-
-				'#define MAX_DIR_LIGHTS ' + parameters.maxDirLights,
-				'#define MAX_POINT_LIGHTS ' + parameters.maxPointLights,
-				'#define MAX_SPOT_LIGHTS ' + parameters.maxSpotLights,
-				'#define MAX_HEMI_LIGHTS ' + parameters.maxHemiLights,
-
-				'#define MAX_SHADOWS ' + parameters.maxShadows,
-
-				'#define MAX_BONES ' + parameters.maxBones,
-
-				parameters.map ? '#define USE_MAP' : '',
-				parameters.envMap ? '#define USE_ENVMAP' : '',
-				parameters.envMap ? '#define ' + envMapModeDefine : '',
-				parameters.lightMap ? '#define USE_LIGHTMAP' : '',
-				parameters.bumpMap ? '#define USE_BUMPMAP' : '',
-				parameters.normalMap ? '#define USE_NORMALMAP' : '',
-				parameters.specularMap ? '#define USE_SPECULARMAP' : '',
-				parameters.alphaMap ? '#define USE_ALPHAMAP' : '',
+	
 				parameters.vertexColors ? '#define USE_COLOR' : '',
 
-				parameters.skinning ? '#define USE_SKINNING' : '',
-				parameters.useVertexTexture ? '#define BONE_TEXTURE' : '',
-
-				parameters.morphTargets ? '#define USE_MORPHTARGETS' : '',
-				parameters.morphNormals ? '#define USE_MORPHNORMALS' : '',
-				parameters.wrapAround ? '#define WRAP_AROUND' : '',
-				parameters.doubleSided ? '#define DOUBLE_SIDED' : '',
-				parameters.flipSided ? '#define FLIP_SIDED' : '',
-
-				parameters.shadowMapEnabled ? '#define USE_SHADOWMAP' : '',
-				parameters.shadowMapEnabled ? '#define ' + shadowMapTypeDefine : '',
-				parameters.shadowMapDebug ? '#define SHADOWMAP_DEBUG' : '',
-				parameters.shadowMapCascade ? '#define SHADOWMAP_CASCADE' : '',
-
-				parameters.sizeAttenuation ? '#define USE_SIZEATTENUATION' : '',
-
-				parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
-				//_this._glExtensionFragDepth ? '#define USE_LOGDEPTHBUF_EXT' : '',
 
 
 				'uniform mat4 modelMatrix;',
@@ -274,44 +244,44 @@ var WebGLProgram = ( function () {
 
 				customDefines,
 
-				'#define MAX_DIR_LIGHTS ' + parameters.maxDirLights,
-				'#define MAX_POINT_LIGHTS ' + parameters.maxPointLights,
-				'#define MAX_SPOT_LIGHTS ' + parameters.maxSpotLights,
-				'#define MAX_HEMI_LIGHTS ' + parameters.maxHemiLights,
+				// '#define MAX_DIR_LIGHTS ' + parameters.maxDirLights,
+				// '#define MAX_POINT_LIGHTS ' + parameters.maxPointLights,
+				// '#define MAX_SPOT_LIGHTS ' + parameters.maxSpotLights,
+				// '#define MAX_HEMI_LIGHTS ' + parameters.maxHemiLights,
 
-				'#define MAX_SHADOWS ' + parameters.maxShadows,
+				// '#define MAX_SHADOWS ' + parameters.maxShadows,
 
-				parameters.alphaTest ? '#define ALPHATEST ' + parameters.alphaTest: '',
+				// parameters.alphaTest ? '#define ALPHATEST ' + parameters.alphaTest: '',
 
-				_this.gammaInput ? '#define GAMMA_INPUT' : '',
-				_this.gammaOutput ? '#define GAMMA_OUTPUT' : '',
+				// _this.gammaInput ? '#define GAMMA_INPUT' : '',
+				// _this.gammaOutput ? '#define GAMMA_OUTPUT' : '',
 
-				( parameters.useFog && parameters.fog ) ? '#define USE_FOG' : '',
-				( parameters.useFog && parameters.fogExp ) ? '#define FOG_EXP2' : '',
+				// ( parameters.useFog && parameters.fog ) ? '#define USE_FOG' : '',
+				// ( parameters.useFog && parameters.fogExp ) ? '#define FOG_EXP2' : '',
 
-				parameters.map ? '#define USE_MAP' : '',
-				parameters.envMap ? '#define USE_ENVMAP' : '',
-				parameters.envMap ? '#define ' + envMapTypeDefine : '',
-				parameters.envMap ? '#define ' + envMapModeDefine : '',
-				parameters.envMap ? '#define ' + envMapBlendingDefine : '',
-				parameters.lightMap ? '#define USE_LIGHTMAP' : '',
-				parameters.bumpMap ? '#define USE_BUMPMAP' : '',
-				parameters.normalMap ? '#define USE_NORMALMAP' : '',
-				parameters.specularMap ? '#define USE_SPECULARMAP' : '',
-				parameters.alphaMap ? '#define USE_ALPHAMAP' : '',
+				// parameters.map ? '#define USE_MAP' : '',
+				// parameters.envMap ? '#define USE_ENVMAP' : '',
+				// parameters.envMap ? '#define ' + envMapTypeDefine : '',
+				// parameters.envMap ? '#define ' + envMapModeDefine : '',
+				// parameters.envMap ? '#define ' + envMapBlendingDefine : '',
+				// parameters.lightMap ? '#define USE_LIGHTMAP' : '',
+				// parameters.bumpMap ? '#define USE_BUMPMAP' : '',
+				// parameters.normalMap ? '#define USE_NORMALMAP' : '',
+				// parameters.specularMap ? '#define USE_SPECULARMAP' : '',
+				// parameters.alphaMap ? '#define USE_ALPHAMAP' : '',
 				parameters.vertexColors ? '#define USE_COLOR' : '',
 
-				parameters.metal ? '#define METAL' : '',
-				parameters.wrapAround ? '#define WRAP_AROUND' : '',
-				parameters.doubleSided ? '#define DOUBLE_SIDED' : '',
-				parameters.flipSided ? '#define FLIP_SIDED' : '',
+				// parameters.metal ? '#define METAL' : '',
+				// parameters.wrapAround ? '#define WRAP_AROUND' : '',
+				// parameters.doubleSided ? '#define DOUBLE_SIDED' : '',
+				// parameters.flipSided ? '#define FLIP_SIDED' : '',
 
-				parameters.shadowMapEnabled ? '#define USE_SHADOWMAP' : '',
-				parameters.shadowMapEnabled ? '#define ' + shadowMapTypeDefine : '',
-				parameters.shadowMapDebug ? '#define SHADOWMAP_DEBUG' : '',
-				parameters.shadowMapCascade ? '#define SHADOWMAP_CASCADE' : '',
+				// parameters.shadowMapEnabled ? '#define USE_SHADOWMAP' : '',
+				// parameters.shadowMapEnabled ? '#define ' + shadowMapTypeDefine : '',
+				// parameters.shadowMapDebug ? '#define SHADOWMAP_DEBUG' : '',
+				// parameters.shadowMapCascade ? '#define SHADOWMAP_CASCADE' : '',
 
-				parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
+				// parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
 				//_this._glExtensionFragDepth ? '#define USE_LOGDEPTHBUF_EXT' : '',
 
 				'uniform mat4 viewMatrix;',
@@ -331,15 +301,18 @@ var WebGLProgram = ( function () {
 		_gl.attachShader( program, glVertexShader );
 		_gl.attachShader( program, glFragmentShader );
 
-		if ( index0AttributeName !== undefined ) {
+		// if ( index0AttributeName !== undefined ) {
 
-			// Force a particular attribute to index 0.
-			// because potentially expensive emulation is done by browser if attribute 0 is disabled.
-			// And, color, for example is often automatically bound to index 0 so disabling it
+		// 	// Force a particular attribute to index 0.
+		// 	// because potentially expensive emulation is done by browser if attribute 0 is disabled.
+		// 	// And, color, for example is often automatically bound to index 0 so disabling it
 
-			_gl.bindAttribLocation( program, 0, index0AttributeName );
+		// 	console.log(index0AttributeName, 'index0AttributeName');
+			
 
-		}
+		// 	_gl.bindAttribLocation( program, 0, index0AttributeName );
+
+		// }
 
 		_gl.linkProgram( program );
 
@@ -398,7 +371,8 @@ var WebGLProgram = ( function () {
 
 		}
 
-
+		console.log(uniforms, 'uniforms');
+		
 		for ( var u in uniforms ) {
 
 			identifiers.push( u );

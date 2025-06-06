@@ -46,7 +46,7 @@ function WebGLRenderer( parameters ) {
 	var _canvas = parameters.canvas !== undefined ? parameters.canvas : document.createElement( 'canvas' ),
 	_context = parameters.context !== undefined ? parameters.context : null,
 
-	pixelRatio = 1,
+	pixelRatio = 1, 
 
 	_precision = parameters.precision !== undefined ? parameters.precision : 'highp',
 
@@ -2301,7 +2301,7 @@ function WebGLRenderer( parameters ) {
 			updateBuffers = true;
 
 		}
-
+		
 		if ( updateBuffers ) {
 
 			initAttributes();
@@ -2404,221 +2404,222 @@ function WebGLRenderer( parameters ) {
 
 			}
 
-		} else if ( object instanceof PointCloud ) {
+		} 
+		// else if ( object instanceof PointCloud ) {
 
-			// render particles
+		// 	// render particles
 
-			var mode = _gl.POINTS;
+		// 	var mode = _gl.POINTS;
 
-			var index = geometry.attributes.index;
+		// 	var index = geometry.attributes.index;
 
-			if ( index ) {
+		// 	if ( index ) {
 
-				// indexed points
+		// 		// indexed points
 
-				var type, size;
+		// 		var type, size;
 
-				if ( index.array instanceof Uint32Array && extensions.get( 'OES_element_index_uint' ) ) {
+		// 		if ( index.array instanceof Uint32Array && extensions.get( 'OES_element_index_uint' ) ) {
 
-					type = _gl.UNSIGNED_INT;
-					size = 4;
+		// 			type = _gl.UNSIGNED_INT;
+		// 			size = 4;
 
-				} else {
+		// 		} else {
 
-					type = _gl.UNSIGNED_SHORT;
-					size = 2;
+		// 			type = _gl.UNSIGNED_SHORT;
+		// 			size = 2;
 
-				}
+		// 		}
 
-				var offsets = geometry.offsets;
+		// 		var offsets = geometry.offsets;
 
-				if ( offsets.length === 0 ) {
+		// 		if ( offsets.length === 0 ) {
 
-					if ( updateBuffers ) {
+		// 			if ( updateBuffers ) {
 
-						setupVertexAttributes( material, program, geometry, 0 );
-						_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
+		// 				setupVertexAttributes( material, program, geometry, 0 );
+		// 				_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
 
-					}
+		// 			}
 
-					_gl.drawElements( mode, index.array.length, type, 0);
+		// 			_gl.drawElements( mode, index.array.length, type, 0);
 
-					_this.info.render.calls ++;
-					_this.info.render.points += index.array.length;
+		// 			_this.info.render.calls ++;
+		// 			_this.info.render.points += index.array.length;
 
-				} else {
+		// 		} else {
 
-					// if there is more than 1 chunk
-					// must set attribute pointers to use new offsets for each chunk
-					// even if geometry and materials didn't change
+		// 			// if there is more than 1 chunk
+		// 			// must set attribute pointers to use new offsets for each chunk
+		// 			// even if geometry and materials didn't change
 
-					if ( offsets.length > 1 ) updateBuffers = true;
+		// 			if ( offsets.length > 1 ) updateBuffers = true;
 
-					for ( var i = 0, il = offsets.length; i < il; i ++ ) {
+		// 			for ( var i = 0, il = offsets.length; i < il; i ++ ) {
 
-						var startIndex = offsets[ i ].index;
+		// 				var startIndex = offsets[ i ].index;
 
-						if ( updateBuffers ) {
+		// 				if ( updateBuffers ) {
 
-							setupVertexAttributes( material, program, geometry, startIndex );
-							_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
+		// 					setupVertexAttributes( material, program, geometry, startIndex );
+		// 					_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
 
-						}
+		// 				}
 
-						// render indexed points
+		// 				// render indexed points
 
-						_gl.drawElements( mode, offsets[ i ].count, type, offsets[ i ].start * size );
+		// 				_gl.drawElements( mode, offsets[ i ].count, type, offsets[ i ].start * size );
 
-						_this.info.render.calls ++;
-						_this.info.render.points += offsets[ i ].count;
+		// 				_this.info.render.calls ++;
+		// 				_this.info.render.points += offsets[ i ].count;
 
-					}
+		// 			}
 
-				}
+		// 		}
 
-			} else {
+		// 	} else {
 
-				// non-indexed points
+		// 		// non-indexed points
 
-				if ( updateBuffers ) {
+		// 		if ( updateBuffers ) {
 
-					setupVertexAttributes( material, program, geometry, 0 );
+		// 			setupVertexAttributes( material, program, geometry, 0 );
 
-				}
+		// 		}
 
-				var position = geometry.attributes.position;
-				var offsets = geometry.offsets;
+		// 		var position = geometry.attributes.position;
+		// 		var offsets = geometry.offsets;
 
-				if ( offsets.length === 0 ) {
+		// 		if ( offsets.length === 0 ) {
 
-					_gl.drawArrays( mode, 0, position.array.length / 3 );
+		// 			_gl.drawArrays( mode, 0, position.array.length / 3 );
 
-					_this.info.render.calls ++;
-					_this.info.render.points += position.array.length / 3;
+		// 			_this.info.render.calls ++;
+		// 			_this.info.render.points += position.array.length / 3;
 
-				} else {
+		// 		} else {
 
-					for ( var i = 0, il = offsets.length; i < il; i ++ ) {
+		// 			for ( var i = 0, il = offsets.length; i < il; i ++ ) {
 
-						_gl.drawArrays( mode, offsets[ i ].index, offsets[ i ].count );
+		// 				_gl.drawArrays( mode, offsets[ i ].index, offsets[ i ].count );
 
-						_this.info.render.calls ++;
-						_this.info.render.points += offsets[ i ].count;
+		// 				_this.info.render.calls ++;
+		// 				_this.info.render.points += offsets[ i ].count;
 
-					}
+		// 			}
 
-				}
+		// 		}
 
-			}
+		// 	}
 
-		} else if ( object instanceof Line ) {
+		// } else if ( object instanceof Line ) {
 
-			var mode = ( object.mode === LineStrip ) ? _gl.LINE_STRIP : _gl.LINES;
+		// 	var mode = ( object.mode === LineStrip ) ? _gl.LINE_STRIP : _gl.LINES;
 
-			setLineWidth( material.linewidth );
+		// 	setLineWidth( material.linewidth );
 
-			var index = geometry.attributes.index;
+		// 	var index = geometry.attributes.index;
 
-			if ( index ) {
+		// 	if ( index ) {
 
-				// indexed lines
+		// 		// indexed lines
 
-				var type, size;
+		// 		var type, size;
 
-				if ( index.array instanceof Uint32Array ) {
+		// 		if ( index.array instanceof Uint32Array ) {
 
-					type = _gl.UNSIGNED_INT;
-					size = 4;
+		// 			type = _gl.UNSIGNED_INT;
+		// 			size = 4;
 
-				} else {
+		// 		} else {
 
-					type = _gl.UNSIGNED_SHORT;
-					size = 2;
+		// 			type = _gl.UNSIGNED_SHORT;
+		// 			size = 2;
 
-				}
+		// 		}
 
-				var offsets = geometry.offsets;
+		// 		var offsets = geometry.offsets;
 
-				if ( offsets.length === 0 ) {
+		// 		if ( offsets.length === 0 ) {
 
-					if ( updateBuffers ) {
+		// 			if ( updateBuffers ) {
 
-						setupVertexAttributes( material, program, geometry, 0 );
-						_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
+		// 				setupVertexAttributes( material, program, geometry, 0 );
+		// 				_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
 
-					}
+		// 			}
 
-					_gl.drawElements( mode, index.array.length, type, 0 ); // 2 bytes per Uint16Array
+		// 			_gl.drawElements( mode, index.array.length, type, 0 ); // 2 bytes per Uint16Array
 
-					_this.info.render.calls ++;
-					_this.info.render.vertices += index.array.length; // not really true, here vertices can be shared
+		// 			_this.info.render.calls ++;
+		// 			_this.info.render.vertices += index.array.length; // not really true, here vertices can be shared
 
-				} else {
+		// 		} else {
 
-					// if there is more than 1 chunk
-					// must set attribute pointers to use new offsets for each chunk
-					// even if geometry and materials didn't change
+		// 			// if there is more than 1 chunk
+		// 			// must set attribute pointers to use new offsets for each chunk
+		// 			// even if geometry and materials didn't change
 
-					if ( offsets.length > 1 ) updateBuffers = true;
+		// 			if ( offsets.length > 1 ) updateBuffers = true;
 
-					for ( var i = 0, il = offsets.length; i < il; i ++ ) {
+		// 			for ( var i = 0, il = offsets.length; i < il; i ++ ) {
 
-						var startIndex = offsets[ i ].index;
+		// 				var startIndex = offsets[ i ].index;
 
-						if ( updateBuffers ) {
+		// 				if ( updateBuffers ) {
 
-							setupVertexAttributes( material, program, geometry, startIndex );
-							_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
+		// 					setupVertexAttributes( material, program, geometry, startIndex );
+		// 					_gl.bindBuffer( _gl.ELEMENT_ARRAY_BUFFER, index.buffer );
 
-						}
+		// 				}
 
-						// render indexed lines
+		// 				// render indexed lines
 
-						_gl.drawElements( mode, offsets[ i ].count, type, offsets[ i ].start * size ); // 2 bytes per Uint16Array
+		// 				_gl.drawElements( mode, offsets[ i ].count, type, offsets[ i ].start * size ); // 2 bytes per Uint16Array
 
-						_this.info.render.calls ++;
-						_this.info.render.vertices += offsets[ i ].count; // not really true, here vertices can be shared
+		// 				_this.info.render.calls ++;
+		// 				_this.info.render.vertices += offsets[ i ].count; // not really true, here vertices can be shared
 
-					}
+		// 			}
 
-				}
+		// 		}
 
-			} else {
+		// 	} else {
 
-				// non-indexed lines
+		// 		// non-indexed lines
 
-				if ( updateBuffers ) {
+		// 		if ( updateBuffers ) {
 
-					setupVertexAttributes( material, program, geometry, 0 );
+		// 			setupVertexAttributes( material, program, geometry, 0 );
 
-				}
+		// 		}
 
-				var position = geometry.attributes.position;
-				var offsets = geometry.offsets;
+		// 		var position = geometry.attributes.position;
+		// 		var offsets = geometry.offsets;
 
-				if ( offsets.length === 0 ) {
+		// 		if ( offsets.length === 0 ) {
 
-					_gl.drawArrays( mode, 0, position.array.length / 3 );
+		// 			_gl.drawArrays( mode, 0, position.array.length / 3 );
 
-					_this.info.render.calls ++;
-					_this.info.render.vertices += position.array.length / 3;
+		// 			_this.info.render.calls ++;
+		// 			_this.info.render.vertices += position.array.length / 3;
 
-				} else {
+		// 		} else {
 
-					for ( var i = 0, il = offsets.length; i < il; i ++ ) {
+		// 			for ( var i = 0, il = offsets.length; i < il; i ++ ) {
 
-						_gl.drawArrays( mode, offsets[ i ].index, offsets[ i ].count );
+		// 				_gl.drawArrays( mode, offsets[ i ].index, offsets[ i ].count );
 
-						_this.info.render.calls ++;
-						_this.info.render.vertices += offsets[ i ].count;
+		// 				_this.info.render.calls ++;
+		// 				_this.info.render.vertices += offsets[ i ].count;
 
-					}
+		// 			}
 
-				}
+		// 		}
 
-			}
+		// 	}
 
-		}
+		// }
 
 	};
 
@@ -3084,7 +3085,7 @@ function WebGLRenderer( parameters ) {
 	// Rendering
 
 	this.render = function ( scene, camera, renderTarget, forceClear ) {
-		console.log('tttttttttttttttttttttttttttttttttt');
+		// console.log('tttttttttttttttttttttttttttttttttt');
 		if ( camera instanceof Camera === false ) {
 
 			console.error( 'WebGLRenderer.render: camera is not an instance of Camera.' );
@@ -3116,7 +3117,7 @@ function WebGLRenderer( parameters ) {
 
 
 		var material = null;
-		console.log('tttttttttttttttttttttttttttttttttt222222222222222222');
+		// console.log('tttttttttttttttttttttttttttttttttt222222222222222222');
 		
 
 		renderObjects( opaqueObjects, camera, lights, fog, false, material );
@@ -3145,7 +3146,7 @@ function WebGLRenderer( parameters ) {
 
 			var webglObjects = _webglObjects[ object.id ];
 
-			console.log(webglObjects, 'webglObjects');
+			// console.log(webglObjects, 'webglObjects');
 			
 
 			if ( webglObjects && ( object.frustumCulled === false || _frustum.intersectsObject( object ) === true ) ) {
@@ -3186,7 +3187,7 @@ function WebGLRenderer( parameters ) {
 	function renderObjects( renderList, camera, lights, fog, useBlending, overrideMaterial ) {
 
 		var material;
-		console.log(renderList, 'renderListrenderList');
+		// console.log(renderList, 'renderListrenderList');
 		
 		for ( var i = 0, l = renderList.length; i < l; i ++ ) {
 
@@ -3207,12 +3208,12 @@ function WebGLRenderer( parameters ) {
 
 			_this.setMaterialFaces( material );
 
-			console.log('lllllllllllllllllllllll');
+			// console.log('lllllllllllllllllllllll');
 			
 
 			if ( buffer instanceof BufferGeometry ) {
 
-				console.log('bbbbbbbbbbbbbbbbbbbbbb');
+				// console.log('bbbbbbbbbbbbbbbbbbbbbb');
 				
 
 				_this.renderBufferDirect( camera, lights, fog, material, buffer, object );
@@ -3313,8 +3314,11 @@ function WebGLRenderer( parameters ) {
 			if ( object instanceof Mesh ) {
 
 				if ( geometry instanceof BufferGeometry ) {
+					console.log('BufferGeometry');
+					
 
 					addBuffer( _webglObjects, geometry, object );
+					
 
 				} else if ( geometry instanceof Geometry ) {
 
@@ -3488,6 +3492,8 @@ function WebGLRenderer( parameters ) {
 				z: 0
 			}
 		);
+		console.log(objlist, 'objlist');
+		
 
 	};
 
@@ -3512,7 +3518,7 @@ function WebGLRenderer( parameters ) {
 		var geometry = object.geometry;
 
 		if ( geometry instanceof BufferGeometry ) {
-			console.log('llllllllllllllllllllllllll');
+			// console.log('llllllllllllllllllllllllll');
 			
 			var attributes = geometry.attributes;
 			var attributesKeys = geometry.attributesKeys;
@@ -3532,6 +3538,9 @@ function WebGLRenderer( parameters ) {
 				if ( attribute.needsUpdate === true ) {
 
 					var bufferType = ( key === 'index' ) ? _gl.ELEMENT_ARRAY_BUFFER : _gl.ARRAY_BUFFER;
+
+					console.log(key, bufferType, 'bufferType');
+					
 
 					_gl.bindBuffer( bufferType, attribute.buffer );
 					_gl.bufferData( bufferType, attribute.array, _gl.STATIC_DRAW );
@@ -3573,6 +3582,9 @@ function WebGLRenderer( parameters ) {
 					 geometry.uvsNeedUpdate || geometry.normalsNeedUpdate ||
 					 geometry.colorsNeedUpdate || geometry.tangentsNeedUpdate || customAttributesDirty ) {
 
+					console.log('setMeshBuffers');
+					
+
 					setMeshBuffers( geometryGroup, object, _gl.DYNAMIC_DRAW, ! geometry.dynamic, material );
 
 				}
@@ -3587,7 +3599,7 @@ function WebGLRenderer( parameters ) {
 			geometry.colorsNeedUpdate = false;
 			geometry.tangentsNeedUpdate = false;
 
-			material.attributes && clearCustomAttributes( material );
+			// material.attributes && clearCustomAttributes( material );
 
 		} 
 		
@@ -3709,10 +3721,15 @@ function WebGLRenderer( parameters ) {
 
 		var shaderID = shaderIDs[ material.type ];
 
+		console.log(shaderID, 'shaderID');
+		
+
 		if ( shaderID ) {
 			
 			
 			var shader = ShaderLib[ shaderID ];
+			console.log(shader, 'shadershader');
+			
 
 			material.__webglShader = {
 				uniforms: UniformsUtils.clone( shader.uniforms ),
@@ -4015,54 +4032,54 @@ function WebGLRenderer( parameters ) {
 		// auto-setting of texture unit for bone texture must go before other textures
 		// not sure why, but otherwise weird things happen
 
-		if ( material.skinning ) {
+		// if ( material.skinning ) {
 
-			if ( object.bindMatrix && p_uniforms.bindMatrix !== null ) {
+		// 	if ( object.bindMatrix && p_uniforms.bindMatrix !== null ) {
 
-				_gl.uniformMatrix4fv( p_uniforms.bindMatrix, false, object.bindMatrix.elements );
+		// 		_gl.uniformMatrix4fv( p_uniforms.bindMatrix, false, object.bindMatrix.elements );
 
-			}
+		// 	}
 
-			if ( object.bindMatrixInverse && p_uniforms.bindMatrixInverse !== null ) {
+		// 	if ( object.bindMatrixInverse && p_uniforms.bindMatrixInverse !== null ) {
 
-				_gl.uniformMatrix4fv( p_uniforms.bindMatrixInverse, false, object.bindMatrixInverse.elements );
+		// 		_gl.uniformMatrix4fv( p_uniforms.bindMatrixInverse, false, object.bindMatrixInverse.elements );
 
-			}
+		// 	}
 
-			if ( _supportsBoneTextures && object.skeleton && object.skeleton.useVertexTexture ) {
+		// 	if ( _supportsBoneTextures && object.skeleton && object.skeleton.useVertexTexture ) {
 
-				if ( p_uniforms.boneTexture !== null ) {
+		// 		if ( p_uniforms.boneTexture !== null ) {
 
-					var textureUnit = getTextureUnit();
+		// 			var textureUnit = getTextureUnit();
 
-					_gl.uniform1i( p_uniforms.boneTexture, textureUnit );
-					_this.setTexture( object.skeleton.boneTexture, textureUnit );
+		// 			_gl.uniform1i( p_uniforms.boneTexture, textureUnit );
+		// 			_this.setTexture( object.skeleton.boneTexture, textureUnit );
 
-				}
+		// 		}
 
-				if ( p_uniforms.boneTextureWidth !== null ) {
+		// 		if ( p_uniforms.boneTextureWidth !== null ) {
 
-					_gl.uniform1i( p_uniforms.boneTextureWidth, object.skeleton.boneTextureWidth );
+		// 			_gl.uniform1i( p_uniforms.boneTextureWidth, object.skeleton.boneTextureWidth );
 
-				}
+		// 		}
 
-				if ( p_uniforms.boneTextureHeight !== null ) {
+		// 		if ( p_uniforms.boneTextureHeight !== null ) {
 
-					_gl.uniform1i( p_uniforms.boneTextureHeight, object.skeleton.boneTextureHeight );
+		// 			_gl.uniform1i( p_uniforms.boneTextureHeight, object.skeleton.boneTextureHeight );
 
-				}
+		// 		}
 
-			} else if ( object.skeleton && object.skeleton.boneMatrices ) {
+		// 	} else if ( object.skeleton && object.skeleton.boneMatrices ) {
 
-				if ( p_uniforms.boneGlobalMatrices !== null ) {
+		// 		if ( p_uniforms.boneGlobalMatrices !== null ) {
 
-					_gl.uniformMatrix4fv( p_uniforms.boneGlobalMatrices, false, object.skeleton.boneMatrices );
+		// 			_gl.uniformMatrix4fv( p_uniforms.boneGlobalMatrices, false, object.skeleton.boneMatrices );
 
-				}
+		// 		}
 
-			}
+		// 	}
 
-		}
+		// }
 
 		if ( refreshMaterial ) {
 
@@ -4165,7 +4182,7 @@ function WebGLRenderer( parameters ) {
 
 	function refreshUniformsCommon ( uniforms, material ) {
 
-		uniforms.opacity.value = material.opacity;
+		// uniforms.opacity.value = material.opacity;
 
 		if ( _this.gammaInput ) {
 
@@ -4177,10 +4194,10 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		uniforms.map.value = material.map;
-		uniforms.lightMap.value = material.lightMap;
-		uniforms.specularMap.value = material.specularMap;
-		uniforms.alphaMap.value = material.alphaMap;
+		// uniforms.map.value = material.map;
+		// uniforms.lightMap.value = material.lightMap;
+		// uniforms.specularMap.value = material.specularMap;
+		// uniforms.alphaMap.value = material.alphaMap;
 
 		if ( material.bumpMap ) {
 
@@ -4236,21 +4253,21 @@ function WebGLRenderer( parameters ) {
 
 		}
 
-		uniforms.envMap.value = material.envMap;
-		uniforms.flipEnvMap.value = ( material.envMap instanceof WebGLRenderTargetCube ) ? 1 : - 1;
+		// uniforms.envMap.value = material.envMap;
+		// uniforms.flipEnvMap.value = ( material.envMap instanceof WebGLRenderTargetCube ) ? 1 : - 1;
 
 		if ( _this.gammaInput ) {
 
 			//uniforms.reflectivity.value = material.reflectivity * material.reflectivity;
-			uniforms.reflectivity.value = material.reflectivity;
+			// uniforms.reflectivity.value = material.reflectivity;
 
 		} else {
 
-			uniforms.reflectivity.value = material.reflectivity;
+			// uniforms.reflectivity.value = material.reflectivity;
 
 		}
 
-		uniforms.refractionRatio.value = material.refractionRatio;
+		// uniforms.refractionRatio.value = material.refractionRatio;
 
 	}
 

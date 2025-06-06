@@ -11,94 +11,94 @@ var UniformsLib = {
 		"diffuse" : { type: "c", value: new Color( 0xeeeeee ) },
 		"opacity" : { type: "f", value: 1.0 },
 
-		"map" : { type: "t", value: null },
-		"offsetRepeat" : { type: "v4", value: new Vector4( 0, 0, 1, 1 ) },
+		// "map" : { type: "t", value: null },
+		// // "offsetRepeat" : { type: "v4", value: new Vector4( 0, 0, 1, 1 ) },
 
-		"lightMap" : { type: "t", value: null },
-		"specularMap" : { type: "t", value: null },
-		"alphaMap" : { type: "t", value: null },
+		// "lightMap" : { type: "t", value: null },
+		// "specularMap" : { type: "t", value: null },
+		// "alphaMap" : { type: "t", value: null },
 
-		"envMap" : { type: "t", value: null },
-		"flipEnvMap" : { type: "f", value: - 1 },
-		"reflectivity" : { type: "f", value: 1.0 },
-		"refractionRatio" : { type: "f", value: 0.98 },
+		// "envMap" : { type: "t", value: null },
+		// "flipEnvMap" : { type: "f", value: - 1 },
+		// "reflectivity" : { type: "f", value: 1.0 },
+		// "refractionRatio" : { type: "f", value: 0.98 },
 
-		"morphTargetInfluences" : { type: "f", value: 0 }
-
-	},
-
-	bump: {
-
-		"bumpMap" : { type: "t", value: null },
-		"bumpScale" : { type: "f", value: 1 }
+		// "morphTargetInfluences" : { type: "f", value: 0 }
 
 	},
 
-	normalmap: {
+	// bump: {
 
-		"normalMap" : { type: "t", value: null },
-		"normalScale" : { type: "v2", value: new Vector2( 1, 1 ) }
-	},
+	// 	"bumpMap" : { type: "t", value: null },
+	// 	"bumpScale" : { type: "f", value: 1 }
 
-	fog : {
+	// },
 
-		"fogDensity" : { type: "f", value: 0.00025 },
-		"fogNear" : { type: "f", value: 1 },
-		"fogFar" : { type: "f", value: 2000 },
-		"fogColor" : { type: "c", value: new Color( 0xffffff ) }
+	// normalmap: {
 
-	},
+	// 	"normalMap" : { type: "t", value: null },
+	// 	"normalScale" : { type: "v2", value: new Vector2( 1, 1 ) }
+	// },
 
-	lights: {
+	// fog : {
 
-		"ambientLightColor" : { type: "fv", value: [] },
+	// 	"fogDensity" : { type: "f", value: 0.00025 },
+	// 	"fogNear" : { type: "f", value: 1 },
+	// 	"fogFar" : { type: "f", value: 2000 },
+	// 	"fogColor" : { type: "c", value: new Color( 0xffffff ) }
 
-		"directionalLightDirection" : { type: "fv", value: [] },
-		"directionalLightColor" : { type: "fv", value: [] },
+	// },
 
-		"hemisphereLightDirection" : { type: "fv", value: [] },
-		"hemisphereLightSkyColor" : { type: "fv", value: [] },
-		"hemisphereLightGroundColor" : { type: "fv", value: [] },
+	// lights: {
 
-		"pointLightColor" : { type: "fv", value: [] },
-		"pointLightPosition" : { type: "fv", value: [] },
-		"pointLightDistance" : { type: "fv1", value: [] },
+	// 	"ambientLightColor" : { type: "fv", value: [] },
 
-		"spotLightColor" : { type: "fv", value: [] },
-		"spotLightPosition" : { type: "fv", value: [] },
-		"spotLightDirection" : { type: "fv", value: [] },
-		"spotLightDistance" : { type: "fv1", value: [] },
-		"spotLightAngleCos" : { type: "fv1", value: [] },
-		"spotLightExponent" : { type: "fv1", value: [] }
+	// 	"directionalLightDirection" : { type: "fv", value: [] },
+	// 	"directionalLightColor" : { type: "fv", value: [] },
 
-	},
+	// 	"hemisphereLightDirection" : { type: "fv", value: [] },
+	// 	"hemisphereLightSkyColor" : { type: "fv", value: [] },
+	// 	"hemisphereLightGroundColor" : { type: "fv", value: [] },
 
-	particle: {
+	// 	"pointLightColor" : { type: "fv", value: [] },
+	// 	"pointLightPosition" : { type: "fv", value: [] },
+	// 	"pointLightDistance" : { type: "fv1", value: [] },
 
-		"psColor" : { type: "c", value: new Color( 0xeeeeee ) },
-		"opacity" : { type: "f", value: 1.0 },
-		"size" : { type: "f", value: 1.0 },
-		"scale" : { type: "f", value: 1.0 },
-		"map" : { type: "t", value: null },
+	// 	"spotLightColor" : { type: "fv", value: [] },
+	// 	"spotLightPosition" : { type: "fv", value: [] },
+	// 	"spotLightDirection" : { type: "fv", value: [] },
+	// 	"spotLightDistance" : { type: "fv1", value: [] },
+	// 	"spotLightAngleCos" : { type: "fv1", value: [] },
+	// 	"spotLightExponent" : { type: "fv1", value: [] }
 
-		"fogDensity" : { type: "f", value: 0.00025 },
-		"fogNear" : { type: "f", value: 1 },
-		"fogFar" : { type: "f", value: 2000 },
-		"fogColor" : { type: "c", value: new Color( 0xffffff ) }
+	// },
 
-	},
+	// particle: {
 
-	shadowmap: {
+	// 	"psColor" : { type: "c", value: new Color( 0xeeeeee ) },
+	// 	"opacity" : { type: "f", value: 1.0 },
+	// 	"size" : { type: "f", value: 1.0 },
+	// 	"scale" : { type: "f", value: 1.0 },
+	// 	"map" : { type: "t", value: null },
 
-		"shadowMap": { type: "tv", value: [] },
-		"shadowMapSize": { type: "v2v", value: [] },
+	// 	"fogDensity" : { type: "f", value: 0.00025 },
+	// 	"fogNear" : { type: "f", value: 1 },
+	// 	"fogFar" : { type: "f", value: 2000 },
+	// 	"fogColor" : { type: "c", value: new Color( 0xffffff ) }
 
-		"shadowBias" : { type: "fv1", value: [] },
-		"shadowDarkness": { type: "fv1", value: [] },
+	// },
 
-		"shadowMatrix" : { type: "m4v", value: [] }
+	// shadowmap: {
 
-	}
+	// 	"shadowMap": { type: "tv", value: [] },
+	// 	"shadowMapSize": { type: "v2v", value: [] },
+
+	// 	"shadowBias" : { type: "fv1", value: [] },
+	// 	"shadowDarkness": { type: "fv1", value: [] },
+
+	// 	"shadowMatrix" : { type: "m4v", value: [] }
+
+	// }
 
 };
 export {UniformsLib}

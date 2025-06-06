@@ -41,3 +41,5 @@ Object.assign(Vector3.prototype, {
 ```
 
 console.log(v.a); // ✅ 输出函数 a
+
+## 3.

@@ -414,6 +414,7 @@ Object.assign( Matrix4.prototype,  {
 		return this;
 
 	},
+	
 
 	multiplyToArray: function ( a, b, r ) {
 

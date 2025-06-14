@@ -77,7 +77,7 @@ function MeshBasicMaterial ( parameters ) {
 
 MeshBasicMaterial.prototype = Object.create( Material.prototype );
 MeshBasicMaterial.prototype.constructor = MeshBasicMaterial;
-
+MeshBasicMaterial.prototype.isMeshBasicMaterial = true;
 MeshBasicMaterial.prototype.clone = function () {
 
 	var material = new MeshBasicMaterial();

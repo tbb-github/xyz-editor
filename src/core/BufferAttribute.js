@@ -10,11 +10,20 @@
 	}
 	this.array = array;
 	this.itemSize = itemSize;
-
+	this.dynamic = false;
 	this.needsUpdate = false;
+	this.version = 0;
 
 };
+Object.defineProperty( BufferAttribute.prototype, 'needsUpdate', {
 
+	set: function ( value ) {
+
+		if ( value === true ) this.version ++;
+
+	}
+
+} );
 Object.assign( BufferAttribute.prototype, {
 
 	isBufferAttribute: true,
@@ -26,6 +35,30 @@ Object.assign( BufferAttribute.prototype, {
 		console.log(this, 'thisthis');
 		
 		return this.array.length;
+
+	},
+	onUploadCallback: function () {},
+
+	setArray: function ( array ) {
+
+		if ( Array.isArray( array ) ) {
+
+			throw new TypeError( 'THREE.BufferAttribute: array should be a Typed Array.' );
+
+		}
+
+		this.count = array !== undefined ? array.length / this.itemSize : 0;
+		this.array = array;
+
+		return this;
+
+	},
+
+	setDynamic: function ( value ) {
+
+		this.dynamic = value;
+
+		return this;
 
 	},
 
@@ -183,4 +216,23 @@ function Float64Attribute ( data, itemSize ) {
 	return new BufferAttribute( data, itemSize );
 
 };
-export { BufferAttribute,Int8Attribute,Uint8Attribute,Uint8ClampedAttribute,Int16Attribute,Uint16Attribute,Int32Attribute,Uint32Attribute,Float32Attribute,Float64Attribute };
+
+function Uint16BufferAttribute( array, itemSize, normalized ) {
+
+	BufferAttribute.call( this, new Uint16Array( array ), itemSize, normalized );
+
+}
+
+Uint16BufferAttribute.prototype = Object.create( BufferAttribute.prototype );
+Uint16BufferAttribute.prototype.constructor = Uint16BufferAttribute;
+
+
+function Uint32BufferAttribute( array, itemSize, normalized ) {
+
+	BufferAttribute.call( this, new Uint32Array( array ), itemSize, normalized );
+
+}
+
+Uint32BufferAttribute.prototype = Object.create( BufferAttribute.prototype );
+Uint32BufferAttribute.prototype.constructor = Uint32BufferAttribute;
+export { Uint16BufferAttribute, Uint32BufferAttribute, BufferAttribute,Int8Attribute,Uint8Attribute,Uint8ClampedAttribute,Int16Attribute,Uint16Attribute,Int32Attribute,Uint32Attribute,Float32Attribute,Float64Attribute };

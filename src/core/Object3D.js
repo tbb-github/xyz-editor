@@ -7,6 +7,7 @@
 import { Quaternion } from '../math/Quaternion.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
+import { Matrix3 } from '../math/Matrix3.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { Euler } from '../math/Euler.js';
 import { _Math } from '../math/Math.js';
@@ -61,6 +62,12 @@ function Object3D() {
 			enumerable: true,
 			value: scale
 		},
+		modelViewMatrix: {
+			value: new Matrix4()
+		},
+		normalMatrix: {
+			value: new Matrix3()
+		}
 	} );
 
 	this.rotationAutoUpdate = true;

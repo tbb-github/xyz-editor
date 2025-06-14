@@ -8,10 +8,14 @@ import { EventDispatcher } from './EventDispatcher.js';
 import { _Math } from '../math/Math.js';
 import {BufferAttribute} from './BufferAttribute.js'
 import {Sphere} from '../math/Sphere.js'
+var bufferGeometryId = 1; // BufferGeometry uses odd numbers as Id
 function BufferGeometry() {
 
 	// Object.defineProperty( this, 'id', { value: GeometryIdCount ++ } );
 
+	Object.defineProperty( this, 'id', { value: bufferGeometryId += 2 } );
+	console.log(this, 'thisthisthis');
+	
 	this.uuid = _Math.generateUUID();
 
 	this.name = '';
@@ -28,9 +32,12 @@ function BufferGeometry() {
 
 };
 
-Object.assign( BufferGeometry.prototype, {
+
+BufferGeometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), {
 
 	constructor: BufferGeometry,
+
+	isBufferGeometry: true,
 
 	addAttribute: function ( name, attribute ) {
 
@@ -961,6 +968,6 @@ Object.assign( BufferGeometry.prototype, {
 
 });
 
-EventDispatcher.prototype.apply( BufferGeometry.prototype );
+// EventDispatcher.prototype.apply( BufferGeometry.prototype );
 
 export { BufferGeometry };

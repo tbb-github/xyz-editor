@@ -54,19 +54,19 @@ var WebGLProgram = ( function () {
 
 	};
 
-	return function ( renderer, code, material, parameters ) {
+	return function ( renderer, code, material, parameters, shader) {
 
 		
 		var _this = renderer;
 		var _gl = _this.context;
 
 		var defines = material.defines;
-		var uniforms = material.__webglShader.uniforms;
-		var attributes = material.attributes;
-		console.log(material.__webglShader.vertexShader, '0000---');
+		var uniforms = shader.uniforms;
+		// var attributes = material.attributes;
+
 		
-		var vertexShader = material.__webglShader.vertexShader;
-		var fragmentShader = material.__webglShader.fragmentShader;
+		var vertexShader = shader.vertexShader;
+		var fragmentShader = shader.fragmentShader;
 
 
 		var customDefines = generateDefines( defines );
@@ -201,7 +201,7 @@ var WebGLProgram = ( function () {
 
 		}
 
-		console.log(uniforms, 'uniforms');
+
 		
 		for ( var u in uniforms ) {
 
@@ -210,7 +210,7 @@ var WebGLProgram = ( function () {
 		}
 
 		this.uniforms = cacheUniformLocations( _gl, program, identifiers );
-
+		console.log(this.uniforms, 'uniforms--------');
 		// cache attributes locations
 
 		identifiers = [
@@ -239,11 +239,11 @@ var WebGLProgram = ( function () {
 
 		}
 
-		for ( var a in attributes ) {
+		// for ( var a in attributes ) {
 
-			identifiers.push( a );
+		// 	identifiers.push( a );
 
-		}
+		// }
 
 		
 		this.attributes = cacheAttributeLocations( _gl, program, identifiers );

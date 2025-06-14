@@ -24,7 +24,7 @@ function Mesh ( geometry, material ) {
 
 Mesh.prototype = Object.create( Object3D.prototype );
 Mesh.prototype.constructor = Mesh;
-
+Mesh.prototype.isMesh = true;
 Mesh.prototype.updateMorphTargets = function () {
 
 	if ( this.geometry.morphTargets !== undefined && this.geometry.morphTargets.length > 0 ) {
